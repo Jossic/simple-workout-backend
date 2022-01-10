@@ -10,15 +10,19 @@ async function config() {
 }
 
 // Automatically build and tear down our instance
-async function build() {
+function build() {
     const app = Fastify();
 
     // fastify-plugin ensures that all decorators
     // are exposed for testing purposes, this is
     // different from the production setup
-    void app.register(fp(App), await config());
 
-    await app.ready();
+    beforeAll(async () => {
+        void app.register(fp(App), await config());
+        await app.ready();
+    });
+
+    afterAll(() => app.close());
 
     return app;
 }

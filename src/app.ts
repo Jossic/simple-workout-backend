@@ -1,10 +1,6 @@
 import { join } from 'path';
-import AutoLoad, { AutoloadPluginOptions } from 'fastify-autoload';
+import AutoLoad from 'fastify-autoload';
 import { FastifyPluginAsync } from 'fastify';
-
-export type AppOptions = {
-    // Place your custom options for app below here.
-} & Partial<AutoloadPluginOptions>;
 
 function loadEnv(key: string) {
     const val = process.env[key];
@@ -26,10 +22,7 @@ const appConfig = {
     mongo_uri: loadEnv('MONGO_URI'),
 };
 
-const app: FastifyPluginAsync<AppOptions> = async (
-    fastify,
-    opts,
-): Promise<void> => {
+const app: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
     // Place here your custom code!
     fastify.decorate('appConfig', appConfig);
 

@@ -1,8 +1,8 @@
 import fp from 'fastify-plugin';
-import * as mongoose from 'mongoose';
-import { UserModel, UserSchema } from '../models/UserModel';
 import fastifyJwt from 'fastify-jwt';
 import { fastifyRequestContextPlugin } from 'fastify-request-context';
+import * as mongoose from 'mongoose';
+import { UserModel, UserSchema } from '../models/UserModel';
 
 export interface SupportPluginOptions {
     // Specify Support plugin options here
@@ -11,14 +11,15 @@ export interface SupportPluginOptions {
 // The use of fastify-plugin is required to be able
 // to export the decorators to the outer scope
 export default fp<SupportPluginOptions>(async (fastify, opts) => {
+    fastify.register(fastifyRequestContextPlugin);
+
+    // JWT Setup
     fastify.register(fastifyJwt, {
         secret: 'mysuperSecRetdfb5fn1f6m1hg6f4-ddf',
         sign: {
             expiresIn: '15 days',
         },
     });
-
-    fastify.register(fastifyRequestContextPlugin);
 
     fastify.decorate('generateJwt', (email: string) => {
         return fastify.jwt.sign({ email });

@@ -22,6 +22,11 @@ const app: FastifyPluginAsync<AppOptions> = async (
         options: opts,
     });
 
+    // Register cors
+    void fastify.register(require('fastify-cors'), {
+        // put your options here
+    });
+
     // This loads all plugins defined in routes
     // define your routes in one of these
     void fastify.register(AutoLoad, {

@@ -13,6 +13,7 @@ const SignupResponse = Type.Object({
     lastName: Type.String(),
     email: Type.String(),
     token: Type.String(),
+    message: Type.String(),
 });
 
 export const SignupOpts: RouteShorthandOptions = {

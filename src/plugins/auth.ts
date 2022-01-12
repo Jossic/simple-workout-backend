@@ -13,13 +13,13 @@ export default fp(async (fastify) => {
         .register(
             grant.fastify()({
                 defaults: {
-                    origin: fastify.appConfig.apiOrigin,
+                    origin: process.env.API_ORIGIN,
                     transport: 'session',
                     state: true,
                 },
                 google: {
-                    key: fastify.appConfig.google.client_id,
-                    secret: fastify.appConfig.google.client_secret,
+                    key: process.env.GOOGLE_CLIENT_ID,
+                    secret: process.env.GOOGLE_CLIENT_SECRET,
                     scope: ['openid'],
                     nonce: true,
                     custom_params: { access_type: 'offline' },

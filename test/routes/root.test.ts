@@ -1,9 +1,9 @@
 import { build } from '../helper';
 
-describe('Root tests', () => {
+describe.skip('Root tests', () => {
     const app = build();
 
-    it('default root route', async () => {
+    it.skip('default root route', async () => {
         const res = await app.inject({
             url: '/',
         });

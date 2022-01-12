@@ -3,6 +3,8 @@ import fastifyJwt from 'fastify-jwt';
 import { fastifyRequestContextPlugin } from 'fastify-request-context';
 import * as mongoose from 'mongoose';
 import { UserModel, UserSchema } from '../models/UserModel';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 export interface SupportPluginOptions {
     // Specify Support plugin options here
@@ -11,6 +13,9 @@ export interface SupportPluginOptions {
 // The use of fastify-plugin is required to be able
 // to export the decorators to the outer scope
 export default fp<SupportPluginOptions>(async (fastify, opts) => {
+    fastify.decorate('someSupport', function () {
+        return 'hugs';
+    });
     fastify.register(fastifyRequestContextPlugin);
 
     // JWT Setup
@@ -25,18 +30,21 @@ export default fp<SupportPluginOptions>(async (fastify, opts) => {
         return fastify.jwt.sign({ email });
     });
 
-    const db = await mongoose.connect(fastify.appConfig.mongo_uri);
-    console.log(`MongoDB Connected: ${db.connection.host}`);
+    if (process.env.MONGO_URI) {
+        const db = await mongoose.connect(process.env.MONGO_URI);
+        // console.log(`MongoDB Connected: ${db.connection.host}`);
 
-    fastify.decorate('store', {
-        User: db.model('User', UserSchema),
-        db,
-    });
+        fastify.decorate('store', {
+            User: db.model('User', UserSchema),
+            db,
+        });
+    }
 });
 
 // When using .decorate you have to specify added properties for Typescript
 declare module 'fastify' {
     export interface FastifyInstance {
+        someSupport(): string;
         generateJwt: (email: string) => string;
         store: {
             User: mongoose.Model<UserModel>;

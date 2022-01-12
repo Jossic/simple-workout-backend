@@ -29,7 +29,11 @@ const auth: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 
                 const token = fastify.generateJwt(user.email);
 
-                reply.status(201).send({ ...user.toObject(), token });
+                reply.status(201).send({
+                    ...user.toObject(),
+                    token,
+                    message: 'Utilisateur crée avec succés',
+                });
             } catch (error) {
                 request.log.error('Erreur lors du signup');
             }
